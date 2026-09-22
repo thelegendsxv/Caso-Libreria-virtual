@@ -1,11 +1,6 @@
 package com.libreria.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,7 +15,7 @@ public class Resena {
     private String nombreUsuario;
 
     @NotBlank
-    @Lob
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String texto;
 
     @ManyToOne
