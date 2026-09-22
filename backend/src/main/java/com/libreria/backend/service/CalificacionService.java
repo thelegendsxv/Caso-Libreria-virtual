@@ -1,6 +1,7 @@
 package com.libreria.backend.service;
 
 import com.libreria.backend.dto.CalificacionDTO;
+import com.libreria.backend.exception.ResourceNotFoundException;
 import com.libreria.backend.model.Calificacion;
 import com.libreria.backend.model.Libro;
 import com.libreria.backend.repository.CalificacionRepository;
@@ -24,12 +25,12 @@ public class CalificacionService {
     }
 
     // Requisito: calificar de 1 a 5, sin exigir que se haya comprado el libro
-    public void calificar(Long libroId, CalificacionDTO dto) {
+    public Calificacion calificar(Long libroId, CalificacionDTO dto) {
         Libro libro = libroRepository.findById(libroId)
-                .orElseThrow(() -> new RuntimeException("Libro no encontrado con id: " + libroId));
+                .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado con id: " + libroId));
 
         Calificacion calificacion = new Calificacion(dto.getValor(), libro);
-        calificacionRepository.save(calificacion);
+        return calificacionRepository.save(calificacion);
     }
 
     public Double obtenerPromedio(Long libroId) {

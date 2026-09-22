@@ -1,6 +1,7 @@
 package com.libreria.backend.service;
 
 import com.libreria.backend.dto.ResenaDTO;
+import com.libreria.backend.exception.ResourceNotFoundException;
 import com.libreria.backend.model.Libro;
 import com.libreria.backend.model.Resena;
 import com.libreria.backend.repository.LibroRepository;
@@ -32,7 +33,7 @@ public class ResenaService {
     // Requisito: enviar/guardar la reseña, sin exigir compra previa
     public ResenaDTO guardar(Long libroId, ResenaDTO dto) {
         Libro libro = libroRepository.findById(libroId)
-                .orElseThrow(() -> new RuntimeException("Libro no encontrado con id: " + libroId));
+                .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado con id: " + libroId));
 
         Resena resena = new Resena(dto.getNombreUsuario(), dto.getTexto(), libro);
         Resena guardada = resenaRepository.save(resena);
