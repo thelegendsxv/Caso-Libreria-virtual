@@ -1,6 +1,7 @@
 package com.libreria.backend.service;
 
 import com.libreria.backend.dto.LibroDTO;
+import com.libreria.backend.exception.ResourceNotFoundException;
 import com.libreria.backend.model.Libro;
 import com.libreria.backend.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class LibroService {
 
     public LibroDTO buscarPorId(Long id) {
         Libro libro = libroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Libro no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Libro no encontrado con id: " + id));
         return convertirADTO(libro);
     }
 

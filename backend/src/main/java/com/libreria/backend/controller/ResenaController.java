@@ -4,8 +4,10 @@ import com.libreria.backend.dto.ResenaDTO;
 import com.libreria.backend.service.ResenaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -27,8 +29,10 @@ public class ResenaController {
 
     // Requisito: guardar la reseña, sin exigir compra
     @PostMapping
-    public ResenaDTO guardar(@PathVariable Long libroId, @Valid @RequestBody ResenaDTO dto) {
-        return resenaService.guardar(libroId, dto);
+    public ResponseEntity<ResenaDTO> guardar(@PathVariable Long libroId, @Valid @RequestBody ResenaDTO dto) {
+        ResenaDTO guardada = resenaService.guardar(libroId, dto);
+        URI location = URI.create("/api/libros/" + libroId + "/resenas/" + guardada.getId());
+        return ResponseEntity.created(location).body(guardada);
     }
 
     @GetMapping
