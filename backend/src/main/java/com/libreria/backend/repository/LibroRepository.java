@@ -16,10 +16,13 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
     List<Libro> buscarPorAutorOTitulo(@Param("q") String q);
 
     // Búsqueda avanzada: cualquier combinación de autor, título e ISBN
+    // El CAST es necesario porque Postgres no puede inferir el tipo de un
+    // parametro NULL usado dentro de CONCAT, y falla con 500 si se omite
+    // alguno de los tres parametros (justamente el caso de uso normal).
     @Query("SELECT l FROM Libro l WHERE " +
-            "(:autor IS NULL OR LOWER(l.autor) LIKE LOWER(CONCAT('%', :autor, '%'))) AND " +
-            "(:titulo IS NULL OR LOWER(l.titulo) LIKE LOWER(CONCAT('%', :titulo, '%'))) AND " +
-            "(:isbn IS NULL OR LOWER(l.isbn) LIKE LOWER(CONCAT('%', :isbn, '%')))")
+            "(:autor IS NULL OR LOWER(l.autor) LIKE LOWER(CONCAT('%', CAST(:autor AS string), '%'))) AND " +
+            "(:titulo IS NULL OR LOWER(l.titulo) LIKE LOWER(CONCAT('%', CAST(:titulo AS string), '%'))) AND " +
+            "(:isbn IS NULL OR LOWER(l.isbn) LIKE LOWER(CONCAT('%', CAST(:isbn AS string), '%')))")
     List<Libro> busquedaAvanzada(@Param("autor") String autor,
                                  @Param("titulo") String titulo,
                                  @Param("isbn") String isbn);
